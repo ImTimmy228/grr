@@ -57,27 +57,46 @@
 </head>
 <body>
   <div class="container">
-    <button class="button" onclick="fetchGamesList()">Click for a Random Game</button>
+    <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
   </div>
   <div id="random-link-container">
     <a id="random-link" href="#" target="_blank"></a>
   </div>
 
   <script>
-    function fetchGamesList() {
-      fetch('games.txt')
-        .then(response => response.text())
-        .then(data => {
-          const gamesList = data.trim().split('\n');
-          const randomIndex = Math.floor(Math.random() * gamesList.length);
-          const randomLink = gamesList[randomIndex];
-          const randomLinkElement = document.getElementById('random-link');
-          randomLinkElement.textContent = randomLink;
-          randomLinkElement.href = randomLink;
-        })
-        .catch(error => {
-          console.error('Error fetching games list:', error);
-        });
+    const seenGames = [];
+
+    function fetchRandomGame() {
+      const storedGames = localStorage.getItem('gamesList');
+      if (storedGames) {
+        const gamesList = JSON.parse(storedGames);
+        const unseenGames = gamesList.filter(game => !seenGames.includes(game));
+        if (unseenGames.length === 0) {
+          // All games have been seen, reset the seen games list
+          seenGames.length = 0;
+        }
+        displayRandomGame(unseenGames);
+      } else {
+        fetch('games.txt')
+          .then(response => response.text())
+          .then(data => {
+            const gamesList = data.trim().split('\n');
+            localStorage.setItem('gamesList', JSON.stringify(gamesList));
+            displayRandomGame(gamesList);
+          })
+          .catch(error => {
+            console.error('Error fetching games list:', error);
+          });
+      }
+    }
+
+    function displayRandomGame(gamesList) {
+      const randomIndex = Math.floor(Math.random() * gamesList.length);
+      const randomLink = gamesList[randomIndex];
+      seenGames.push(randomLink);
+      const randomLinkElement = document.getElementById('random-link');
+      randomLinkElement.textContent = randomLink;
+      randomLinkElement.href = randomLink;
     }
   </script>
 </body>
