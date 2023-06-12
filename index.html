@@ -31,6 +31,19 @@
       color: #ffffff;
     }
 
+    .favorite-button {
+      background-color: #ff0000;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      position: fixed;
+      top: 50%;
+      left: calc(50% + 30px);
+      transform: translate(-50%, -50%);
+    }
+
     #random-link-container {
       margin-top: 20px;
       text-align: center;
@@ -78,6 +91,7 @@
 <body>
   <div class="container">
     <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
+    <button class="favorite-button" onclick="addToFavoriteLinks()">Favourite</button>
   </div>
   <div id="random-link-container">
     <a id="random-link" href="#" target="_blank"></a>
@@ -151,6 +165,8 @@
         favoriteListElement.appendChild(listItem);
       });
     }
+
+    displayFavoriteLinks(); // Initial display of favorite links
   </script>
 </body>
 </html>
