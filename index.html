@@ -15,6 +15,8 @@
 
     .button-container {
       position: relative;
+      display: flex;
+      align-items: center;
     }
 
     .button {
@@ -24,63 +26,16 @@
       border-radius: 10px;
       font-size: 18px;
       cursor: pointer;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
+      margin-right: 30px;
     }
 
     .favorite-button {
-      position: absolute;
-      top: 0;
-      right: 30px;
-      background-color: red;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    #favorite-list {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      font-size: 14px;
-      color: white;
-    }
-
-    #favorite-list ul {
-      padding: 0;
-      margin: 0;
-      list-style-type: none;
-    }
-
-    #favorite-list ul li {
-      margin-bottom: 5px;
-    }
-
-    #random-link-container {
-      margin-top: 20px;
-      text-align: center;
-      position: fixed;
-      top: calc(50% + 30px);
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    #random-link {
-      font-size: 16px;
-      text-decoration: none;
-      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientAnimation 10s linear infinite;
-    }
-
-    @keyframes gradientAnimation {
-      0% { background-position: 0% center; }
-      100% { background-position: 100% center; }
+      background-color: #ff0000;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -88,7 +43,7 @@
   <div class="container">
     <div class="button-container">
       <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
-      <button class="favorite-button" onclick="markAsFavorite()">Favourite</button>
+      <button class="favorite-button" onclick="markAsFavorite()">Fav</button>
     </div>
   </div>
   <div id="random-link-container">
@@ -99,6 +54,15 @@
   <script>
     const seenGames = [];
     let favoriteLinks = [];
+
+    // Load favorite links from localStorage on page load
+    window.addEventListener('load', () => {
+      const storedFavorites = localStorage.getItem('favoriteLinks');
+      if (storedFavorites) {
+        favoriteLinks = JSON.parse(storedFavorites);
+        displayFavoriteLinks();
+      }
+    });
 
     function fetchRandomGame() {
       const storedGames = localStorage.getItem('gamesList');
@@ -139,24 +103,23 @@
 
       if (!favoriteLinks.includes(favoriteLink)) {
         favoriteLinks.push(favoriteLink);
+        localStorage.setItem('favoriteLinks', JSON.stringify(favoriteLinks));
+        displayFavoriteLinks();
       }
-
-      displayFavoriteLinks();
     }
 
     function displayFavoriteLinks() {
       const favoriteListElement = document.getElementById('favorite-list');
       favoriteListElement.innerHTML = '';
 
-      const ul = document.createElement('ul');
-
       for (let i = 0; i < favoriteLinks.length; i++) {
-        const li = document.createElement('li');
-        li.textContent = favoriteLinks[i];
-        ul.appendChild(li);
+        const link = document.createElement('a');
+        link.href = favoriteLinks[i];
+        link.textContent = favoriteLinks[i];
+        link.style.display = 'block';
+        link.style.marginBottom = '10px';
+        favoriteListElement.appendChild(link);
       }
-
-      favoriteListElement.appendChild(ul);
     }
   </script>
 </body>
