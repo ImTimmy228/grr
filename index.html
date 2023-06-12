@@ -27,17 +27,24 @@
       color: #ffffff;
     }
 
-    #random-link {
+    #random-link-container {
       margin-top: 20px;
-      font-size: 16px;
       text-align: center;
+    }
+
+    #random-link {
+      font-size: 16px;
+      text-decoration: none;
+      color: #000000;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <button class="button" onclick="fetchGamesList()">Click for a Random Game</button>
-    <div id="random-link"></div>
+    <div id="random-link-container">
+      <a id="random-link" href="#" target="_blank"></a>
+    </div>
   </div>
 
   <script>
@@ -50,6 +57,7 @@
           const randomLink = gamesList[randomIndex];
           const randomLinkElement = document.getElementById('random-link');
           randomLinkElement.textContent = randomLink;
+          randomLinkElement.href = randomLink;
         })
         .catch(error => {
           console.error('Error fetching games list:', error);
