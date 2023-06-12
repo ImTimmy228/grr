@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>mooooooooooooooooooo</title>
+  <title>Random Games</title>
   <style>
     body {
       background-color: #f2f2f2;
@@ -20,6 +20,10 @@
       border-radius: 10px;
       font-size: 18px;
       cursor: pointer;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .button:hover {
@@ -42,9 +46,9 @@
 <body>
   <div class="container">
     <button class="button" onclick="fetchGamesList()">Click for a Random Game</button>
-    <div id="random-link-container">
-      <a id="random-link" href="#" target="_blank"></a>
-    </div>
+  </div>
+  <div id="random-link-container">
+    <a id="random-link" href="#" target="_blank"></a>
   </div>
 
   <script>
