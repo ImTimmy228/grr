@@ -43,15 +43,15 @@
     #random-link {
       font-size: 16px;
       text-decoration: none;
-      background: linear-gradient(to right, cyan, red, blue, green, purple, cyan);
+      background: linear-gradient(to right, cyan, red, blue, green, purple);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: gradientAnimation 5s linear infinite;
     }
 
     @keyframes gradientAnimation {
-      0% { background-position: left; }
-      100% { background-position: right; }
+      0% { background-position: 0% center; }
+      100% { background-position: 100% center; }
     }
   </style>
 </head>
@@ -74,9 +74,6 @@
           const randomLinkElement = document.getElementById('random-link');
           randomLinkElement.textContent = randomLink;
           randomLinkElement.href = randomLink;
-          randomLinkElement.style.animationName = 'none'; // Stop animation
-          randomLinkElement.offsetHeight; // Trigger reflow
-          randomLinkElement.style.animationName = 'gradientAnimation'; // Restart animation
         })
         .catch(error => {
           console.error('Error fetching games list:', error);
