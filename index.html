@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/embed.js/dist/embed.min.js"></script>
+  <script src="https://unpkg.com/link-preview-generator/dist/link-preview-generator.min.js"></script>
   <script>
     function fetchGamesList() {
       fetch('games.txt')
@@ -111,10 +111,10 @@
 
       linkPreviewContainer.style.display = 'block';
 
-      Embedly.extract(url)
+      LinkPreviewGenerator.getPreview(url)
         .then(data => {
           if (data.images && data.images.length > 0) {
-            linkPreviewImage.src = data.images[0].url;
+            linkPreviewImage.src = data.images[0];
           } else {
             linkPreviewImage.style.display = 'none';
           }
