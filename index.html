@@ -4,20 +4,51 @@
   <title>My Website</title>
   <style>
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
     }
-    
-    button {
+
+    .buttons {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .button {
+      margin-right: 10px;
       padding: 10px 20px;
-      font-size: 18px;
+      font-size: 16px;
+    }
+
+    .random-text {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <button onclick="alert('Button clicked!')">CLICK ME</button>
+  <div class="buttons">
+    <button class="button" onclick="window.open('https://your-website-url-goes-here', '_blank')">Rbx Games</button>
+    <button class="button" onclick="showRandomText()">Other 2 as templates</button>
+  </div>
+
+  <div class="random-text">
+    <button onclick="showRandomText()">Click for random text</button>
+    <p id="random-text-display"></p>
+  </div>
+
+  <script>
+    const randomTexts = [
+      "Random text 1",
+      "Random text 2",
+      "Random text 3",
+      "Random text 4",
+      "Random text 5"
+    ];
+
+    function showRandomText() {
+      const randomIndex = Math.floor(Math.random() * randomTexts.length);
+      const randomText = randomTexts[randomIndex];
+      document.getElementById("random-text-display").textContent = randomText;
+    }
+  </script>
 </body>
 </html>
