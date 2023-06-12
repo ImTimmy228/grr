@@ -38,21 +38,36 @@
       cursor: pointer;
     }
 
+    #random-link-container {
+      text-align: center;
+      position: fixed;
+      bottom: calc(50% + 50px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #random-link {
+      font-size: 16px;
+      text-decoration: none;
+      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     #favorite-list {
       display: flex;
       flex-direction: column;
       align-items: center;
       position: fixed;
       top: 20px;
-      right: 20px;
+      left: 20px;
+      color: #ffffff;
     }
 
     #favorite-list a {
       font-size: 16px;
       text-decoration: none;
-      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ffffff;
       margin-bottom: 10px;
     }
   </style>
