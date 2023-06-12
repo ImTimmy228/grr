@@ -35,7 +35,7 @@
       margin-top: 20px;
       text-align: center;
       position: fixed;
-      bottom: 50px;
+      top: calc(50% + 30px);
       left: 50%;
       transform: translateX(-50%);
     }
@@ -44,6 +44,27 @@
       font-size: 16px;
       text-decoration: none;
       color: #000000;
+      display: block;
+      margin-top: 10px;
+    }
+
+    #link-preview-container {
+      display: none;
+      margin-top: 10px;
+    }
+
+    #link-preview-image {
+      max-width: 200px;
+      max-height: 200px;
+      margin-bottom: 10px;
+    }
+
+    #link-preview-title {
+      font-weight: bold;
+    }
+
+    #link-preview-description {
+      font-style: italic;
     }
   </style>
 </head>
@@ -53,8 +74,14 @@
   </div>
   <div id="random-link-container">
     <a id="random-link" href="#" target="_blank"></a>
+    <div id="link-preview-container">
+      <img id="link-preview-image" src="" alt="Link Preview" />
+      <div id="link-preview-title"></div>
+      <div id="link-preview-description"></div>
+    </div>
   </div>
 
+  <script src="https://unpkg.com/link-preview-js/dist/link-preview.min.js"></script>
   <script>
     function fetchGamesList() {
       fetch('games.txt')
@@ -66,10 +93,30 @@
           const randomLinkElement = document.getElementById('random-link');
           randomLinkElement.textContent = randomLink;
           randomLinkElement.href = randomLink;
+
+          showLinkPreview(randomLink);
         })
         .catch(error => {
           console.error('Error fetching games list:', error);
         });
+    }
+
+    async function showLinkPreview(url) {
+      const previewData = await LinkPreview.getPreview(url);
+      const linkPreviewContainer = document.getElementById('link-preview-container');
+      const linkPreviewImage = document.getElementById('link-preview-image');
+      const linkPreviewTitle = document.getElementById('link-preview-title');
+      const linkPreviewDescription = document.getElementById('link-preview-description');
+
+      if (previewData && previewData.images && previewData.images.length > 0) {
+        linkPreviewImage.src = previewData.images[0];
+        linkPreviewContainer.style.display = 'block';
+      } else {
+        linkPreviewContainer.style.display = 'none';
+      }
+
+      linkPreviewTitle.textContent = previewData.title || '';
+      linkPreviewDescription.textContent = previewData.description || '';
     }
   </script>
 </body>
