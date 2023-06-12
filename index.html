@@ -51,11 +51,13 @@
     #link-preview-container {
       display: none;
       margin-top: 10px;
+      max-width: 400px;
+      text-align: left;
     }
 
     #link-preview-image {
-      max-width: 200px;
-      max-height: 200px;
+      max-width: 100%;
+      height: auto;
       margin-bottom: 10px;
     }
 
@@ -81,7 +83,7 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/link-preview-js/dist/link-preview.min.js"></script>
+  <script src="https://unpkg.com/embed.js/dist/embed.min.js"></script>
   <script>
     function fetchGamesList() {
       fetch('games.txt')
@@ -101,22 +103,29 @@
         });
     }
 
-    async function showLinkPreview(url) {
-      const previewData = await LinkPreview.getPreview(url);
+    function showLinkPreview(url) {
       const linkPreviewContainer = document.getElementById('link-preview-container');
       const linkPreviewImage = document.getElementById('link-preview-image');
       const linkPreviewTitle = document.getElementById('link-preview-title');
       const linkPreviewDescription = document.getElementById('link-preview-description');
 
-      if (previewData && previewData.images && previewData.images.length > 0) {
-        linkPreviewImage.src = previewData.images[0];
-        linkPreviewContainer.style.display = 'block';
-      } else {
-        linkPreviewContainer.style.display = 'none';
-      }
+      linkPreviewContainer.style.display = 'block';
 
-      linkPreviewTitle.textContent = previewData.title || '';
-      linkPreviewDescription.textContent = previewData.description || '';
+      Embedly.extract(url)
+        .then(data => {
+          if (data.images && data.images.length > 0) {
+            linkPreviewImage.src = data.images[0].url;
+          } else {
+            linkPreviewImage.style.display = 'none';
+          }
+
+          linkPreviewTitle.textContent = data.title || '';
+          linkPreviewDescription.textContent = data.description || '';
+        })
+        .catch(error => {
+          console.error('Error retrieving link preview:', error);
+          linkPreviewContainer.style.display = 'none';
+        });
     }
   </script>
 </body>
