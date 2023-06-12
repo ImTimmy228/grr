@@ -13,6 +13,10 @@
       padding: 0;
     }
 
+    .button-container {
+      position: relative;
+    }
+
     .button {
       background-color: #ffffff;
       color: #000000;
@@ -24,11 +28,18 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      z-index: 1;
     }
 
-    .button:hover {
-      background-color: #000000;
-      color: #ffffff;
+    .favorite-button {
+      position: absolute;
+      top: 0;
+      left: -80px;
+      background-color: red;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
     }
 
     #random-link-container {
@@ -53,18 +64,35 @@
       0% { background-position: 0% center; }
       100% { background-position: 100% center; }
     }
+
+    #favorite-link {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 100vh;
+      background-color: rgba(255, 0, 0, 0.5);
+      transition: left 1s, top 1s;
+      pointer-events: none;
+      z-index: 0;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
+    <div class="button-container">
+      <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
+      <button class="favorite-button" onclick="markAsFavorite()">Favourite</button>
+    </div>
   </div>
   <div id="random-link-container">
     <a id="random-link" href="#" target="_blank"></a>
   </div>
+  <div id="favorite-link"></div>
 
   <script>
     const seenGames = [];
+    let favoriteLink = null;
 
     function fetchRandomGame() {
       const storedGames = localStorage.getItem('gamesList');
@@ -97,6 +125,21 @@
       const randomLinkElement = document.getElementById('random-link');
       randomLinkElement.textContent = randomLink;
       randomLinkElement.href = randomLink;
+
+      if (favoriteLink === randomLink) {
+        const favoriteLinkElement = document.getElementById('favorite-link');
+        favoriteLinkElement.style.left = '0';
+        favoriteLinkElement.style.top = '0';
+      }
+    }
+
+    function markAsFavorite() {
+      const randomLinkElement = document.getElementById('random-link');
+      favoriteLink = randomLinkElement.href;
+
+      const favoriteLinkElement = document.getElementById('favorite-link');
+      favoriteLinkElement.style.left = 'calc(100vw - 10px)';
+      favoriteLinkElement.style.top = 'calc(100vh - 100px)';
     }
   </script>
 </body>
