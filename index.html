@@ -13,12 +13,6 @@
       padding: 0;
     }
 
-    .button-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
     .button {
       background-color: #ffffff;
       color: #000000;
@@ -26,22 +20,22 @@
       border-radius: 10px;
       font-size: 18px;
       cursor: pointer;
-      margin-right: 30px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
-    .favorite-button {
-      background-color: #ff0000;
+    .button:hover {
+      background-color: #000000;
       color: #ffffff;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 18px;
-      cursor: pointer;
     }
 
     #random-link-container {
+      margin-top: 20px;
       text-align: center;
       position: fixed;
-      bottom: calc(50% + 50px);
+      top: calc(50% + 30px);
       left: 50%;
       transform: translateX(-50%);
     }
@@ -49,69 +43,72 @@
     #random-link {
       font-size: 16px;
       text-decoration: none;
+      color: #000000;
       background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: gradientAnimation 10s linear infinite;
     }
 
-    #favorite-list {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    @keyframes gradientAnimation {
+      0% { background-position: 0% center; }
+      100% { background-position: 100% center; }
+    }
+
+    .favorite-links {
       position: fixed;
-      top: 20px;
-      left: 20px;
+      top: 30px;
+      left: 30px;
       color: #ffffff;
+      font-size: 18px;
+      text-align: left;
+      line-height: 1.5;
     }
 
-    #favorite-list a {
-      font-size: 16px;
-      text-decoration: none;
+    .reset-button {
+      background-color: #ff0000;
       color: #ffffff;
-      margin-bottom: 10px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="button-container">
-      <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
-      <button class="favorite-button" onclick="saveFavoriteLink()">Fav</button>
-    </div>
+    <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
   </div>
   <div id="random-link-container">
     <a id="random-link" href="#" target="_blank"></a>
   </div>
-  <div id="favorite-list"></div>
+  <div class="favorite-links">
+    <h3>Favourited Games:</h3>
+    <ul id="favorite-list"></ul>
+    <button class="reset-button" onclick="resetFavoriteLinks()">Reset Favourited Games</button>
+  </div>
 
   <script>
-    const favoriteLinks = [];
-
-    // Load favorite links from localStorage on page load
-    window.addEventListener('load', () => {
-      const storedFavorites = localStorage.getItem('favoriteLinks');
-      if (storedFavorites) {
-        favoriteLinks.push(...JSON.parse(storedFavorites));
-        displayFavoriteLinks();
-      }
-    });
+    const seenGames = [];
+    const favoriteLinks = JSON.parse(localStorage.getItem('favoriteLinks')) || [];
 
     function fetchRandomGame() {
       const storedGames = localStorage.getItem('gamesList');
       if (storedGames) {
         const gamesList = JSON.parse(storedGames);
-        const randomIndex = Math.floor(Math.random() * gamesList.length);
-        const randomLink = gamesList[randomIndex];
-        displayRandomGame(randomLink);
+        const unseenGames = gamesList.filter(game => !seenGames.includes(game));
+        if (unseenGames.length === 0) {
+          // All games have been seen, reset the seen games list
+          seenGames.length = 0;
+        }
+        displayRandomGame(unseenGames);
       } else {
         fetch('games.txt')
           .then(response => response.text())
           .then(data => {
             const gamesList = data.trim().split('\n');
             localStorage.setItem('gamesList', JSON.stringify(gamesList));
-            const randomIndex = Math.floor(Math.random() * gamesList.length);
-            const randomLink = gamesList[randomIndex];
-            displayRandomGame(randomLink);
+            displayRandomGame(gamesList);
           })
           .catch(error => {
             console.error('Error fetching games list:', error);
@@ -119,32 +116,40 @@
       }
     }
 
-    function displayRandomGame(link) {
+    function displayRandomGame(gamesList) {
+      const randomIndex = Math.floor(Math.random() * gamesList.length);
+      const randomLink = gamesList[randomIndex];
+      seenGames.push(randomLink);
       const randomLinkElement = document.getElementById('random-link');
-      randomLinkElement.textContent = link;
-      randomLinkElement.href = link;
+      randomLinkElement.textContent = randomLink;
+      randomLinkElement.href = randomLink;
     }
 
-    function saveFavoriteLink() {
+    function resetFavoriteLinks() {
+      favoriteLinks.length = 0; // Clear the favoriteLinks array
+      localStorage.removeItem('favoriteLinks'); // Remove the favoriteLinks from localStorage
+      displayFavoriteLinks(); // Update the displayed favorite links
+    }
+
+    function addToFavoriteLinks() {
       const randomLinkElement = document.getElementById('random-link');
-      const favoriteLink = randomLinkElement.href;
-      if (!favoriteLinks.includes(favoriteLink)) {
-        favoriteLinks.push(favoriteLink);
+      const randomLink = randomLinkElement.textContent;
+      if (!favoriteLinks.includes(randomLink)) {
+        favoriteLinks.push(randomLink);
         localStorage.setItem('favoriteLinks', JSON.stringify(favoriteLinks));
-        displayFavoriteLinks();
+        displayFavoriteLinks(); // Update the displayed favorite links
       }
     }
 
     function displayFavoriteLinks() {
       const favoriteListElement = document.getElementById('favorite-list');
-      favoriteListElement.innerHTML = '';
+      favoriteListElement.innerHTML = ''; // Clear the existing favorite links
 
-      for (let i = 0; i < favoriteLinks.length; i++) {
-        const link = document.createElement('a');
-        link.href = favoriteLinks[i];
-        link.textContent = favoriteLinks[i];
-        favoriteListElement.appendChild(link);
-      }
+      favoriteLinks.forEach(link => {
+        const listItem = document.createElement('li');
+        listItem.textContent = link;
+        favoriteListElement.appendChild(listItem);
+      });
     }
   </script>
 </body>
