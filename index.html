@@ -13,6 +13,10 @@
       padding: 0;
     }
 
+    .container {
+      position: relative;
+    }
+
     .button {
       background-color: #ffffff;
       color: #000000;
@@ -20,15 +24,6 @@
       border-radius: 10px;
       font-size: 18px;
       cursor: pointer;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .button:hover {
-      background-color: #000000;
-      color: #ffffff;
     }
 
     .favorite-button {
@@ -38,19 +33,15 @@
       border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-      position: fixed;
+      position: absolute;
       top: 50%;
-      left: calc(50% + 30px);
+      left: calc(100% + 50px);
       transform: translate(-50%, -50%);
     }
 
     #random-link-container {
       margin-top: 20px;
       text-align: center;
-      position: fixed;
-      top: calc(50% + 30px);
-      left: 50%;
-      transform: translateX(-50%);
     }
 
     #random-link {
