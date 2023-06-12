@@ -37,13 +37,22 @@
       font-size: 18px;
       cursor: pointer;
     }
+
+    #favorite-list {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="button-container">
       <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
-      <button class="favorite-button" onclick="markAsFavorite()">Fav</button>
+      <button class="favorite-button" onclick="saveFavoriteLink()">Fav</button>
     </div>
   </div>
   <div id="random-link-container">
@@ -52,14 +61,13 @@
   <div id="favorite-list"></div>
 
   <script>
-    const seenGames = [];
-    let favoriteLinks = [];
+    const favoriteLinks = [];
 
     // Load favorite links from localStorage on page load
     window.addEventListener('load', () => {
       const storedFavorites = localStorage.getItem('favoriteLinks');
       if (storedFavorites) {
-        favoriteLinks = JSON.parse(storedFavorites);
+        favoriteLinks.push(...JSON.parse(storedFavorites));
         displayFavoriteLinks();
       }
     });
@@ -68,19 +76,18 @@
       const storedGames = localStorage.getItem('gamesList');
       if (storedGames) {
         const gamesList = JSON.parse(storedGames);
-        const unseenGames = gamesList.filter(game => !seenGames.includes(game));
-        if (unseenGames.length === 0) {
-          // All games have been seen, reset the seen games list
-          seenGames.length = 0;
-        }
-        displayRandomGame(unseenGames);
+        const randomIndex = Math.floor(Math.random() * gamesList.length);
+        const randomLink = gamesList[randomIndex];
+        displayRandomGame(randomLink);
       } else {
         fetch('games.txt')
           .then(response => response.text())
           .then(data => {
             const gamesList = data.trim().split('\n');
             localStorage.setItem('gamesList', JSON.stringify(gamesList));
-            displayRandomGame(gamesList);
+            const randomIndex = Math.floor(Math.random() * gamesList.length);
+            const randomLink = gamesList[randomIndex];
+            displayRandomGame(randomLink);
           })
           .catch(error => {
             console.error('Error fetching games list:', error);
@@ -88,16 +95,13 @@
       }
     }
 
-    function displayRandomGame(gamesList) {
-      const randomIndex = Math.floor(Math.random() * gamesList.length);
-      const randomLink = gamesList[randomIndex];
-      seenGames.push(randomLink);
+    function displayRandomGame(link) {
       const randomLinkElement = document.getElementById('random-link');
-      randomLinkElement.textContent = randomLink;
-      randomLinkElement.href = randomLink;
+      randomLinkElement.textContent = link;
+      randomLinkElement.href = link;
     }
 
-    function markAsFavorite() {
+    function saveFavoriteLink() {
       const randomLinkElement = document.getElementById('random-link');
       const favoriteLink = randomLinkElement.href;
 
