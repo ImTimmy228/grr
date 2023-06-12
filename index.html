@@ -43,16 +43,15 @@
     #random-link {
       font-size: 16px;
       text-decoration: none;
+      background: linear-gradient(to right, cyan, red, blue, green, purple, cyan);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       animation: gradientAnimation 5s linear infinite;
     }
 
     @keyframes gradientAnimation {
-      0% { color: cyan; }
-      20% { color: red; }
-      40% { color: blue; }
-      60% { color: green; }
-      80% { color: purple; }
-      100% { color: cyan; }
+      0% { background-position: left; }
+      100% { background-position: right; }
     }
   </style>
 </head>
