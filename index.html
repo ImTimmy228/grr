@@ -96,6 +96,14 @@
     .dropdown:hover .dropdown-content {
       display: block;
     }
+    
+    .favorite-link-item {
+      cursor: pointer;
+    }
+
+    .favorite-link-item:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -193,6 +201,10 @@
       favoriteLinks.forEach(link => {
         const linkItem = document.createElement('p');
         linkItem.textContent = link;
+        linkItem.classList.add('favorite-link-item');
+        linkItem.addEventListener('click', () => {
+          window.open(link, '_blank');
+        });
         favoriteListElement.appendChild(linkItem);
       });
 
