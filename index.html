@@ -63,6 +63,7 @@
       font-size: 18px;
       text-align: left;
       line-height: 1.5;
+      margin-top: 20px;
     }
 
     .reset-button {
@@ -75,9 +76,12 @@
       margin-top: 10px;
     }
 
-    .password-input {
+    .prompted-links {
+      color: #ffffff;
+      font-size: 18px;
+      text-align: left;
+      line-height: 1.5;
       margin-top: 20px;
-      text-align: center;
     }
   </style>
 </head>
@@ -103,10 +107,16 @@
     <ul id="favorite-list"></ul>
     <button onclick="resetFavoriteLinks()" class="reset-button">Reset Favourited Games</button>
   </div>
+  
+  <div class="prompted-links" style="display: none;">
+    <h3>Prompted Links:</h3>
+    <ul id="prompted-links-list"></ul>
+  </div>
 
   <script>
     const seenGames = [];
     const favoriteLinks = JSON.parse(localStorage.getItem('favoriteLinks')) || [];
+    const promptedLinks = [];
 
     function validatePassword() {
       const password = document.getElementById('password').value;
@@ -149,6 +159,8 @@
       randomLinkElement.textContent = randomLink;
       randomLinkElement.href = randomLink;
       document.getElementById('random-link-container').style.display = 'block';
+      promptedLinks.push(randomLink);
+      displayPromptedLinks();
     }
 
     function resetFavoriteLinks() {
@@ -180,7 +192,21 @@
       document.querySelector('.favorite-links').style.display = favoriteLinks.length > 0 ? 'block' : 'none';
     }
 
+    function displayPromptedLinks() {
+      const promptedListElement = document.getElementById('prompted-links-list');
+      promptedListElement.innerHTML = '';
+
+      promptedLinks.forEach(link => {
+        const listItem = document.createElement('li');
+        listItem.textContent = link;
+        promptedListElement.appendChild(listItem);
+      });
+
+      document.querySelector('.prompted-links').style.display = promptedLinks.length > 0 ? 'block' : 'none';
+    }
+
     displayFavoriteLinks();
+    displayPromptedLinks();
   </script>
 </body>
 </html>
