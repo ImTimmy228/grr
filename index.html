@@ -86,25 +86,77 @@
       font-size: 16px;
       cursor: pointer;
     }
+
+    .password-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .password-input {
+      margin-bottom: 10px;
+    }
+
+    .password-button {
+      padding: 10px 20px;
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
-    <button class="favorite-button" onclick="addToFavoriteLinks()">Favourite</button>
+  <div id="password-container" class="password-container">
+    <h2>Please enter the password to continue:</h2>
+    <input type="password" id="password-input" class="password-input" placeholder="Enter password">
+    <button onclick="checkPassword()" class="password-button">Submit</button>
+    <p id="error-message" class="error-message"></p>
   </div>
-  <div id="random-link-container">
+
+  <div id="game-container" class="container" style="display: none;">
+    <button onclick="fetchRandomGame()" class="button">Click for a Random Game</button>
+    <button onclick="addToFavoriteLinks()" class="favorite-button">Favourite</button>
+  </div>
+  
+  <div id="random-link-container" style="display: none;">
     <a id="random-link" href="#" target="_blank"></a>
   </div>
-  <div class="favorite-links">
+  
+  <div class="favorite-links" style="display: none;">
     <h3>Favourited Games:</h3>
     <ul id="favorite-list"></ul>
-    <button class="reset-button" onclick="resetFavoriteLinks()">Reset Favourited Games</button>
+    <button onclick="resetFavoriteLinks()" class="reset-button">Reset Favourited Games</button>
   </div>
 
   <script>
     const seenGames = [];
     const favoriteLinks = JSON.parse(localStorage.getItem('favoriteLinks')) || [];
+    const passwordContainer = document.getElementById('password-container');
+    const gameContainer = document.getElementById('game-container');
+    const randomLinkContainer = document.getElementById('random-link-container');
+    const favoriteLinksContainer = document.querySelector('.favorite-links');
+    const passwordInput = document.getElementById('password-input');
+    const errorMessage = document.getElementById('error-message');
+
+    function checkPassword() {
+      const password = 'your-password'; // Replace with your desired password
+      const enteredPassword = passwordInput.value.trim();
+
+      if (enteredPassword === password) {
+        passwordContainer.style.display = 'none';
+        gameContainer.style.display = 'block';
+        randomLinkContainer.style.display = 'block';
+        favoriteLinksContainer.style.display = 'block';
+        displayFavoriteLinks();
+      } else {
+        errorMessage.textContent = 'Invalid password. Please try again.';
+        passwordInput.value = '';
+      }
+    }
 
     function fetchRandomGame() {
       const storedGames = localStorage.getItem('gamesList');
