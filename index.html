@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Random Games</title>
+  <title>Random Game Link</title>
   <style>
     body {
       background-color: #808080;
@@ -13,6 +13,13 @@
       padding: 0;
     }
 
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 300px;
+    }
+
     .button {
       background-color: #ffffff;
       color: #000000;
@@ -20,15 +27,6 @@
       border-radius: 10px;
       font-size: 18px;
       cursor: pointer;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .button:hover {
-      background-color: #000000;
-      color: #ffffff;
     }
 
     .favorite-button {
@@ -38,19 +36,11 @@
       border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-      position: fixed;
-      top: 50%;
-      left: calc(50% + 200px);
-      transform: translate(-50%, -50%);
     }
 
     #random-link-container {
       margin-top: 20px;
       text-align: center;
-      position: fixed;
-      top: calc(50% + 30px);
-      left: 50%;
-      transform: translateX(-50%);
     }
 
     #random-link {
@@ -69,9 +59,6 @@
     }
 
     .favorite-links {
-      position: fixed;
-      top: 30px;
-      left: 30px;
       color: #ffffff;
       font-size: 18px;
       text-align: left;
@@ -85,41 +72,26 @@
       border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-    }
-
-    .password-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      margin-top: 10px;
     }
 
     .password-input {
-      margin-bottom: 10px;
-    }
-
-    .password-button {
-      padding: 10px 20px;
-    }
-
-    .error-message {
-      color: red;
-      margin-top: 10px;
+      margin-top: 20px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div id="password-container" class="password-container">
-    <h2>Please enter the password to continue:</h2>
-    <input type="password" id="password-input" class="password-input" placeholder="Enter password">
-    <button onclick="checkPassword()" class="password-button">Submit</button>
-    <p id="error-message" class="error-message"></p>
+  <div class="password-input">
+    <input type="password" id="password" placeholder="Enter password">
+    <button onclick="validatePassword()">Submit</button>
   </div>
-
-  <div id="game-container" class="container" style="display: none;">
-    <button onclick="fetchRandomGame()" class="button">Click for a Random Game</button>
-    <button onclick="addToFavoriteLinks()" class="favorite-button">Favourite</button>
+  
+  <div class="container" style="display: none;">
+    <div class="button-container">
+      <button class="button" onclick="fetchRandomGame()">Click for a Random Game</button>
+      <button class="favorite-button" onclick="addToFavoriteLinks()">Favourite</button>
+    </div>
   </div>
   
   <div id="random-link-container" style="display: none;">
@@ -135,26 +107,14 @@
   <script>
     const seenGames = [];
     const favoriteLinks = JSON.parse(localStorage.getItem('favoriteLinks')) || [];
-    const passwordContainer = document.getElementById('password-container');
-    const gameContainer = document.getElementById('game-container');
-    const randomLinkContainer = document.getElementById('random-link-container');
-    const favoriteLinksContainer = document.querySelector('.favorite-links');
-    const passwordInput = document.getElementById('password-input');
-    const errorMessage = document.getElementById('error-message');
 
-    function checkPassword() {
-      const password = 'w'; // Replace with your desired password
-      const enteredPassword = passwordInput.value.trim();
-
-      if (enteredPassword === password) {
-        passwordContainer.style.display = 'none';
-        gameContainer.style.display = 'block';
-        randomLinkContainer.style.display = 'block';
-        favoriteLinksContainer.style.display = 'block';
-        displayFavoriteLinks();
+    function validatePassword() {
+      const password = document.getElementById('password').value;
+      if (password === 'w') {
+        document.querySelector('.password-input').style.display = 'none';
+        document.querySelector('.container').style.display = 'block';
       } else {
-        errorMessage.textContent = 'Invalid password. Fuck you.';
-        passwordInput.value = '';
+        alert('Invalid password. Please try again.');
       }
     }
 
@@ -164,7 +124,6 @@
         const gamesList = JSON.parse(storedGames);
         const unseenGames = gamesList.filter(game => !seenGames.includes(game));
         if (unseenGames.length === 0) {
-          // All games have been seen, reset the seen games list
           seenGames.length = 0;
         }
         displayRandomGame(unseenGames);
@@ -189,12 +148,13 @@
       const randomLinkElement = document.getElementById('random-link');
       randomLinkElement.textContent = randomLink;
       randomLinkElement.href = randomLink;
+      document.getElementById('random-link-container').style.display = 'block';
     }
 
     function resetFavoriteLinks() {
-      favoriteLinks.length = 0; // Clear the favoriteLinks array
-      localStorage.removeItem('favoriteLinks'); // Remove the favoriteLinks from localStorage
-      displayFavoriteLinks(); // Update the displayed favorite links
+      favoriteLinks.length = 0;
+      localStorage.removeItem('favoriteLinks');
+      displayFavoriteLinks();
     }
 
     function addToFavoriteLinks() {
@@ -203,22 +163,24 @@
       if (!favoriteLinks.includes(randomLink)) {
         favoriteLinks.push(randomLink);
         localStorage.setItem('favoriteLinks', JSON.stringify(favoriteLinks));
-        displayFavoriteLinks(); // Update the displayed favorite links
+        displayFavoriteLinks();
       }
     }
 
     function displayFavoriteLinks() {
       const favoriteListElement = document.getElementById('favorite-list');
-      favoriteListElement.innerHTML = ''; // Clear the existing favorite links
+      favoriteListElement.innerHTML = '';
 
       favoriteLinks.forEach(link => {
         const listItem = document.createElement('li');
         listItem.textContent = link;
         favoriteListElement.appendChild(listItem);
       });
+
+      document.querySelector('.favorite-links').style.display = favoriteLinks.length > 0 ? 'block' : 'none';
     }
 
-    displayFavoriteLinks(); // Initial display of favorite links
+    displayFavoriteLinks();
   </script>
 </body>
 </html>
